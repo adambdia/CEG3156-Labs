@@ -24,3 +24,6 @@ Thumbs.db
 # Binaries (if any)
 *.exe
 *.dll
+
+#local configs
+local.mk

@@ -5,16 +5,17 @@ WORKDIR    = sim
 LIBDIR     = ../lib
 SRCDIR     = src
 # Target Testbench
-TB         = tb/adder_tb.vhd
+TB         = tb/default_tb.vhd
 # edit this stop time
 STOPTIME = 300ns
-
+-include local.mk
 # Derived: testbench name without .vhd
 TB_NAME    = $(basename $(notdir $(TB)))
 
 LIBFILES   = $(wildcard $(LIBDIR)/*.vhd)
 SRCFILES   = $(wildcard $(SRCDIR)/*.vhd)
 TBFILES    = $(TB)
+
 
 # 1. Analyze & Make
 # We add '-o $(WORKDIR)/$(TB_NAME)' so the executable is saved inside 'sim/'

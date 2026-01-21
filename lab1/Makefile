@@ -5,10 +5,10 @@ WORKDIR    = sim
 LIBDIR     = ../lib
 SRCDIR     = src
 # Target Testbench
-TB         = tb/mux4x1_tb.vhd
+TB         = tb/default_tb.vhd
 # edit this stop time
 STOPTIME = 300ns
-
+-include local.mk
 # Derived: testbench name without .vhd
 TB_NAME    = $(basename $(notdir $(TB)))
 
