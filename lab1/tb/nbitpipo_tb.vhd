@@ -26,7 +26,7 @@ ARCHITECTURE behavior OF nbitpipo_tb IS
 BEGIN
 
     -- Direct entity instantiation (fixes -fexplicit binding warning)
-    uut: ENTITY work.nbitpipo(rtl)
+    uut: ENTITY work.piponbit(rtl)
         GENERIC MAP (bits => bits)
         PORT MAP (
             i_in     => i_in_tb,

@@ -1,13 +1,13 @@
 ----------------------------------------------------------------------
 -- Authors: Akram Atassi and Adam Dia
--- Name: nbitpipo.vhd
+-- Name: piponbit.vhd
 -- Description: n bit parallel in/out register
 ----------------------------------------------------------------------
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 
-entity nbitpipo is
+entity piponbit is
     generic (bits : positive := 8);
     port(
         i_in : in std_logic_vector(bits -1 downto 0);
@@ -15,9 +15,9 @@ entity nbitpipo is
         i_clk : in std_logic;
         i_ld: in std_logic;
         o_out : out std_logic_vector(bits-1 downto 0));
-end nbitpipo;
+end piponbit;
 
-architecture rtl of nbitpipo is
+architecture rtl of piponbit is
 
 begin
     

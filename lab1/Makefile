@@ -5,7 +5,7 @@ WORKDIR    = sim
 LIBDIR     = ../lib
 SRCDIR     = src
 # Target Testbench
-TB         = tb/adder_tb.vhd
+TB         = tb/mux4x1_tb.vhd
 # edit this stop time
 STOPTIME = 300ns
 
