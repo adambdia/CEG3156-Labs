@@ -12,8 +12,9 @@ entity fulladdernbit is
     port(
         i_a : in std_logic_vector(bits-1 downto 0);
         i_b : in std_logic_vector(bits-1 downto 0);
+        i_carry : in std_logic;
         i_subtract : in std_logic;
-        o_sum : in std_logic_vector(bits-1 downto 0);
+        o_sum : out std_logic_vector(bits-1 downto 0);
         o_carry : out std_logic);
 end fulladdernbit;
 
@@ -36,7 +37,8 @@ architecture rtl of fulladdernbit is
                 );
         
         end generate;
-
+    
+    int_carry(0) <= i_carry or i_subtract;
     o_carry <= int_carry(bits);
 
 end rtl;

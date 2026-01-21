@@ -1,10 +1,13 @@
-# GHDL Makefile - lib + tb (src optional)
+# GHDL Makefile - lib + tb (src optional) - GHDL 5.1.1 Standard Deps
 GHDL       = ghdl
 GHDLFLAGS  = --std=93 -fexplicit
 WORKDIR    = sim
 LIBDIR     = ../lib
 SRCDIR     = src
-TB         = tb/nbitpipo_tb.vhd
+# Target Testbench
+TB         = tb/adder_tb.vhd
+# edit this stop time
+STOPTIME = 300ns
 
 # Derived: testbench name without .vhd
 TB_NAME    = $(basename $(notdir $(TB)))
@@ -13,34 +16,32 @@ LIBFILES   = $(wildcard $(LIBDIR)/*.vhd)
 SRCFILES   = $(wildcard $(SRCDIR)/*.vhd)
 TBFILES    = $(TB)
 
+# 1. Analyze & Make
+# We add '-o $(WORKDIR)/$(TB_NAME)' so the executable is saved inside 'sim/'
 analyze:
 	mkdir -p $(WORKDIR)
-	@if [ -n "$(LIBFILES)" ]; then \
-		echo "Analyzing lib: $(LIBFILES)"; \
-		$(GHDL) -a $(GHDLFLAGS) --workdir=$(WORKDIR) $(LIBFILES); \
-	fi
-	@if [ -n "$(SRCFILES)" ]; then \
-		echo "Analyzing src: $(SRCFILES)"; \
-		$(GHDL) -a $(GHDLFLAGS) --workdir=$(WORKDIR) $(SRCFILES); \
-	fi
-	@if [ -n "$(TBFILES)" ]; then \
-		echo "Analyzing tb: $(TBFILES)"; \
-		$(GHDL) -a $(GHDLFLAGS) --workdir=$(WORKDIR) $(TBFILES); \
-	else \
-		echo "ERROR: '$(TB)' not found"; exit 1; \
-	fi
+	@echo "Importing deps..."
+	@$(GHDL) -i $(GHDLFLAGS) --workdir=$(WORKDIR) $(LIBFILES) $(SRCFILES) $(TBFILES)
+	@echo "Compiling binary to $(WORKDIR)/$(TB_NAME)"
+	@$(GHDL) -m $(GHDLFLAGS) --workdir=$(WORKDIR) -o $(WORKDIR)/$(TB_NAME) $(TB_NAME)
 
-elaborate:
-	$(GHDL) -e $(GHDLFLAGS) --workdir=$(WORKDIR) $(TB_NAME)
+elaborate: analyze
 
+# 2. Simulate
+# We now run the binary directly: ./sim/adder_tb
 sim:
-	$(GHDL) -r $(GHDLFLAGS) --workdir=$(WORKDIR) $(TB_NAME) --wave=$(WORKDIR)/$(TB_NAME).ghw --stop-time=300ns
+	@echo "Running simulation..."
+	$(WORKDIR)/$(TB_NAME) --wave=$(WORKDIR)/$(TB_NAME).ghw --stop-time=$(STOPTIME)
 
+# 3. View
 view:
+	@echo "Opening waveform..."
 	gtkwave $(WORKDIR)/$(TB_NAME).ghw &
 
-all: clean analyze elaborate sim view
+all: clean analyze sim view
+
+# Clean removes the sim folder and any loose binaries in root
 clean:
-	rm -rf $(WORKDIR) *.o *.cf
+	rm -rf $(WORKDIR) *.o *.cf $(TB_NAME)
 
 .PHONY: all analyze elaborate sim view clean

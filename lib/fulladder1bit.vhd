@@ -31,7 +31,7 @@ architecture rtl of fulladder1bit is
     ha1: entity work.halfadder
             port map(
                 i_a => i_a,
-                i_b => i_b,
+                i_b => int_b,
                 o_sum => int_sum,
                 o_carry => int_carry
             );
