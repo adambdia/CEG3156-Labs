@@ -1,0 +1,26 @@
+# GHDL simulation outputs
+sim/
+*.o
+*.cf
+*.ghw
+*.vcd
+
+# Makefiles temp
+*.swp
+*.swo
+
+# OS/Editor
+.DS_Store
+Thumbs.db
+*~
+*.bak
+.vscode/
+.idea/
+
+# Logs/Reports
+*.log
+*.cmd
+
+# Binaries (if any)
+*.exe
+*.dll
