@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------
 -- Authors: Akram Atassi and Adam Dia
 -- Name: fulladder1bit.vhd
--- Description: fulladder1bit file
+-- Description: fulladder1bit, supports 2s complement subtraction
 ----------------------------------------------------------------------
 
 LIBRARY ieee;
