@@ -16,7 +16,6 @@ LIBFILES   = $(wildcard $(LIBDIR)/*.vhd)
 SRCFILES   = $(wildcard $(SRCDIR)/*.vhd)
 TBFILES    = $(TB)
 
-
 # 1. Analyze & Make
 # We add '-o $(WORKDIR)/$(TB_NAME)' so the executable is saved inside 'sim/'
 analyze:
