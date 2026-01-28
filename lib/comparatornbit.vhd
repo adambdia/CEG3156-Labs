@@ -12,8 +12,6 @@ entity comparatornbit is
     port(
         i_A : in std_logic_vector(bits-1 downto 0);
         i_B : in std_logic_vector(bits-1 downto 0);
-        i_GTp : in std_logic;
-        i_LTp : in std_logic;
         o_GT : out std_logic;
         o_LT : out std_logic;
         o_EQ : out std_logic);
@@ -36,6 +34,10 @@ architecture rtl of comparatornbit is
                 o_LT => int_LT(i) 
             );
         end generate;
+    
+    -- need to be driven low as taught in digital systems ii
+    int_GT(bits) <= '0';
+    int_LT(bits) <= '0';
     
     -- output driver
     o_GT <= int_GT(0);
