@@ -31,7 +31,7 @@ begin
             i_clk        => i_clk,
             i_exponent  => i_exponent,
             i_exponentSwap  => i_exponentSwap,
-            i_swap       => i_swap,
+            i_mux_select       => i_swap,
             i_ld         => i_ld,
             o_exponent  => o_exponent
         );

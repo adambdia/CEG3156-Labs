@@ -7,7 +7,7 @@ entity exponent is
         i_rstBAR, i_clk     : IN STD_LOGIC;
         i_exponent         : IN STD_LOGIC_VECTOR(bits-1 downto 0);
         i_exponentSwap         : IN STD_LOGIC_VECTOR(bits-1 downto 0);
-        i_swap, i_ld        : IN STD_LOGIC;
+        i_mux_select, i_ld        : IN STD_LOGIC;
         o_exponent         : OUT STD_LOGIC_VECTOR(bits-1 downto 0)
     );
 end exponent;
@@ -22,7 +22,7 @@ begin
         port map(
             i_a => i_exponent,
             i_b => i_exponentSwap,
-            i_sel => i_swap,
+            i_sel => i_mux_select,
             o_out => int_mux);
 
     piponbit_inst: entity work.piponbit
@@ -38,7 +38,7 @@ begin
     );
 
     -- Concurrent drivers
-    int_ld <= i_ld or i_swap;
+    int_ld <= i_ld or i_mux_select;
     -- Output Drivers
     o_exponent <= int_output;
 

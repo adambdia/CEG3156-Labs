@@ -8,7 +8,7 @@ entity significandB is
         i_mantissaB             : in std_logic_vector(bits-2 downto 0);
         i_significandA          : in std_logic_vector(bits-1 downto 0);
         i_ld                    : in std_logic;
-        i_mux_select             : in std_logic_vector(1 downto 0);
+        i_mux_select            : in std_logic_vector(1 downto 0);
         o_significandB          : out std_logic_vector(bits-1 downto 0)
     );
 end significandB;
