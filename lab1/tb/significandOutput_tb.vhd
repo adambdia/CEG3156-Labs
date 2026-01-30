@@ -11,10 +11,12 @@ architecture tb of significandOutput_tb is
 
     signal i_rstBAR            : std_logic := '1';
     signal i_clk               : std_logic := '0';
-    signal i_input             : std_logic_vector(bits-1 downto 0);
+    signal i_input, i_inputA   : std_logic_vector(bits-1 downto 0);
     signal i_ld                : std_logic;
     signal i_shiftL            : std_logic;
+    signal i_ldA               : std_logic;
     signal o_significandOutput : std_logic_vector(bits-1 downto 0);
+    signal flag_zero           : std_logic;
 
 begin
 
@@ -25,9 +27,12 @@ begin
             i_rstBAR            => i_rstBAR,
             i_clk               => i_clk,
             i_input             => i_input,
+            i_inputA            => i_inputA,
             i_ld                => i_ld,
             i_shiftL            => i_shiftL,
-            o_significandOutput => o_significandOutput
+            i_ldA               => i_ldA,
+            o_significandOutput => o_significandOutput,
+            flag_zero           => flag_zero
         );
 
     -- Clock generation
@@ -47,8 +52,9 @@ begin
         -- Init values
         i_ld <= '0';
         i_shiftL <= '0';
+        i_ldA <= '0';
         i_input <= (others => '0');
-
+        i_inputA <= (others => '0');
         -- Reset
         i_rstBAR <= '0';
         wait for 20 ns;
@@ -59,6 +65,7 @@ begin
         -- ==========================
         wait for 10 ns;
         i_input <= "0001000010"; -- 10-bit value
+        i_inputA <= "1111100001";
         i_shiftL <= '0';
         i_ld <= '1';
         wait for clk_period;
@@ -98,6 +105,10 @@ begin
         i_ld <= '1';
         wait for clk_period;
         i_ld <= '0';
+
+        i_ldA <= '1';
+        wait for clk_period;
+        i_ldA <= '0';
 
         -- ==========================
         -- End simulation

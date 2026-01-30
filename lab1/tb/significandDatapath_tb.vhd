@@ -19,6 +19,7 @@ architecture sim of significandDatapath_tb is
     signal i_ldA                 : std_logic := '0';
     signal i_ldB                 : std_logic := '0';
     signal i_ldOutput            : std_logic := '0';
+    signal i_ldOutputA           : std_logic := '0';
 
     signal i_swap                : std_logic := '0';
     signal i_shiftR_B            : std_logic := '0';
@@ -26,7 +27,7 @@ architecture sim of significandDatapath_tb is
     signal i_subtractSignificand : std_logic := '0';
 
     signal o_significandOutput   : std_logic_vector(bits downto 0);
-    signal o_significandA        : std_logic_vector(bits-1 downto 0);
+    signal flag_zero             : std_logic;
 
 begin
 
@@ -52,12 +53,13 @@ begin
             i_ldA                 => i_ldA,
             i_ldB                 => i_ldB,
             i_ldOutput            => i_ldOutput,
+            i_ldOutputA           => i_ldOutputA,
             i_swap                => i_swap,
             i_shiftR_B            => i_shiftR_B,
             i_shiftL_output       => i_shiftL_output,
             i_subtractSignificand => i_subtractSignificand,
             o_significandOutput   => o_significandOutput,
-            o_significandA        => o_significandA
+            flag_zero             => flag_zero
         );
 
     -- Stimulus
@@ -148,6 +150,15 @@ begin
         wait for CLK_PERIOD;
         i_subtractSignificand <= '0';
         i_ldOutput <= '0';
+
+        wait for 2 * CLK_PERIOD;
+
+        --------------------------------------------------
+        -- TEST LOAD A INTO OUTPUT
+        --------------------------------------------------
+        i_ldOutputA <= '1';
+        wait for CLK_PERIOD;
+        i_ldOutputA <= '0';
 
         --------------------------------------------------
         -- END SIM
