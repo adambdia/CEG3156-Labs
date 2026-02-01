@@ -42,6 +42,7 @@ entity fullDatapath is
         -- SignificandDatapath Flags
         flag_zero_significandOutput     : out std_logic;
         flag_MSB_significandOutput      : out std_logic;
+        flag_zero_B                     : out std_logic;
 
         -- ExponentDatapath Flags
         flag_GT_MAX_EDIFF               : out std_logic;
@@ -137,10 +138,19 @@ begin
       o_subtract => int_subtractSignificand
     );
 
+    zero_flag_inst: entity work.zero_flag
+    generic map (
+      WIDTH => mantissa_bits
+    )
+    port map (
+      i_data      => int_mantissaB,
+      o_zero_flag => flag_zero_B
+    );
+
 
     -- Concurrent signals
-    int_A <= int_exponentA & int_mantissaA;
-    int_B <= int_exponentB & int_mantissaB;
+    int_A <= i_exponentA & i_mantissaA;
+    int_B <= i_exponentB & i_mantissaB;
 
     -- Output driver
 end rtl;

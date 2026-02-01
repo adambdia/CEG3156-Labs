@@ -77,10 +77,10 @@ begin
         -- B = + 0.11111111 * 2^1
         i_signA     <= '0';
         i_signB     <= '0';
-        i_exponentA <= "0000100";
-        i_mantissaA <= "00001100";
-        i_exponentB <= "0000001";
-        i_mantissaB <= "11111111";
+        i_exponentB <= "0000100";
+        i_mantissaB <= "00001100";
+        i_exponentA <= "0000001";
+        i_mantissaA <= "11111111";
 
         -- Let FSM run
         wait for 30 * CLK_PERIOD;

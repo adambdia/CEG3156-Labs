@@ -7,6 +7,7 @@ entity Controlpath is
         -- SignificandDatapath Flags
         flag_zero_significandOutput     : in std_logic;
         flag_MSB_significandOutput      : in std_logic;
+        flag_zero_B                     : in std_logic;
 
         -- ExponentDatapath Flags
         flag_GT_MAX_EDIFF               : in std_logic;
@@ -41,7 +42,8 @@ entity Controlpath is
 end Controlpath;
 
 architecture rtl of Controlpath is
-    signal int_SInput, int_sOutput            : std_logic_vector(8 downto 0);
+    signal int_SInput, int_sOutput                      : std_logic_vector(8 downto 0);
+    signal int_delayBlockInput, int_delayBlockOutput    : std_logic_vector(3 downto 0);
 begin
     dff_as_inst: entity work.dff_as
     port map (
@@ -65,16 +67,28 @@ begin
         );
     end generate gen_dFF_ar;
 
+    gen_delays : for i in 0 to 3 generate
+        delay_dFF: entity work.dff_ar
+        port map (
+          i_resetBar => i_rstBAR,
+          i_d        => int_delayBlockInput(i),
+          i_enable   => '1',
+          i_clock    => i_clk,
+          o_q        => int_delayBlockOutput(i),
+          o_qBar     => open
+        );
+    end generate gen_delays;
+
     -- Concurrent signals
     int_SInput(0) <= '0';
     int_SInput(1) <= int_sOutput(0) and flag_B_GT_A;
     int_SInput(2) <= (int_sOutput(0) and (not flag_B_GT_A)) or int_sOutput(1);
-    int_SInput(3) <= ((flag_GT_MAX_EDIFF or flag_zero_Ediff) and int_sOutput(2)) or int_sOutput(3);
-    int_SInput(4) <= (not (flag_GT_MAX_EDIFF or flag_zero_Ediff) and not flag_zero_Ediff and int_sOutput(2)) or (int_sOutput(4) and not flag_zero_Ediff);
-    int_SInput(5) <= (not (flag_GT_MAX_EDIFF or flag_zero_Ediff) and flag_zero_Ediff and int_sOutput(2)) or (int_sOutput(4) and flag_zero_Ediff);
-    int_SInput(6) <= flag_zero_significandOutput and int_sOutput(5);
-    int_SInput(7) <= ((not flag_zero_significandOutput and int_sOutput(5)) or int_sOutput(7)) and not flag_MSB_significandOutput;
-    int_SInput(8) <= (((int_sOutput(5) and not flag_zero_significandOutput) or int_sOutput(7)) and flag_MSB_significandOutput) or int_sOutput(6) or int_sOutput(8);
+    int_SInput(3) <= ((flag_GT_MAX_EDIFF or flag_zero_B) and int_delayBlockOutput(0)) or int_sOutput(3);
+    int_SInput(4) <= (not (flag_GT_MAX_EDIFF or flag_zero_B) and not flag_zero_Ediff and int_delayBlockOutput(0)) or (int_delayBlockOutput(1) and not flag_zero_Ediff);
+    int_SInput(5) <= (not (flag_GT_MAX_EDIFF or flag_zero_B) and flag_zero_Ediff and int_delayBlockOutput(0)) or (int_delayBlockOutput(1) and flag_zero_Ediff);
+    int_SInput(6) <= flag_zero_significandOutput and int_delayBlockOutput(2);
+    int_SInput(7) <= ((not flag_zero_significandOutput and int_delayBlockOutput(2)) or int_delayBlockOutput(3)) and not flag_MSB_significandOutput;
+    int_SInput(8) <= (((int_delayBlockOutput(2) and not flag_zero_significandOutput) or int_delayBlockOutput(3)) and flag_MSB_significandOutput) or int_sOutput(6) or int_sOutput(8);
 
 
     -- Control signals
@@ -97,5 +111,8 @@ begin
     control_ldOutput_exponent <= int_sOutput(5) or int_sOutput(7);
     control_selOutput <= int_sOutput(8);
 
+
+
+    int_delayBlockInput <= int_sOutput(7) & int_sOutput(5) & int_sOutput(4) & int_sOutput(2);
 
 end rtl;

@@ -53,6 +53,7 @@ architecture rtl of topLevel is
     -- =========================
     signal flag_zero_significandOutput  : std_logic;
     signal flag_MSB_significandOutput   : std_logic;
+    signal flag_zero_B                  : std_logic;
     signal flag_GT_MAX_EDIFF            : std_logic;
     signal flag_zero_Ediff              : std_logic;
     signal flag_B_GT_A                  : std_logic;
@@ -70,6 +71,7 @@ begin
 
             flag_zero_significandOutput => flag_zero_significandOutput,
             flag_MSB_significandOutput  => flag_MSB_significandOutput,
+            flag_zero_B                 => flag_zero_B,
             flag_GT_MAX_EDIFF           => flag_GT_MAX_EDIFF,
             flag_zero_Ediff             => flag_zero_Ediff,
             flag_B_GT_A                 => flag_B_GT_A,
@@ -136,6 +138,7 @@ begin
 
             flag_zero_significandOutput => flag_zero_significandOutput,
             flag_MSB_significandOutput  => flag_MSB_significandOutput,
+            flag_zero_B                 => flag_zero_B,
             flag_GT_MAX_EDIFF           => flag_GT_MAX_EDIFF,
             flag_zero_Ediff             => flag_zero_Ediff,
             flag_B_GT_A                 => flag_B_GT_A
