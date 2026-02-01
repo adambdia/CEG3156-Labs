@@ -19,7 +19,7 @@ architecture rtl of significandB is
     signal int_mux                  : std_logic_vector(bits-1 downto 0);
     signal int_significandB_output  : std_logic_vector(bits-1 downto 0);
 begin
-    mux4x1nbit_inst: entity work.mux4x1nbit
+    mux3x1nbit_inst: entity work.mux3x1nbit
     generic map (
       bits => bits
     )
@@ -27,7 +27,6 @@ begin
       i_a   => int_significandB,
       i_b   => i_significandA,
       i_c   => int_shifted,
-      i_d   => int_shifted,
       i_sel => i_mux_select,
       o_out => int_mux
     );

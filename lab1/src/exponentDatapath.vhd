@@ -5,33 +5,37 @@ use ieee.numeric_std.all;
 
 entity exponentDatapath is
     generic(
-        bits : positive := 7;
+        exponent_bits : positive := 7;
         mantissa_bits : positive := 8);
     port(
         i_rstBAR, i_clk             : in std_logic;
-        i_exponentA, i_exponentB    : in std_logic_vector(bits - 1 downto 0);
+        i_exponentA, i_exponentB    : in std_logic_vector(exponent_bits - 1 downto 0);
         i_ldA, i_ldB, i_ldOutput    : in std_logic;
+        i_clrOutput                 : in std_logic;
         i_subtractExponent          : in std_logic;
         i_ldEdiff                   : in std_logic;
         i_swap                      : in std_logic;
         i_sel_adder_input1          : in std_logic_vector(1 downto 0);
         i_sel_adder_input2          : in std_logic;
-        o_exponentOut               : out std_logic_vector(bits - 1 downto 0);
-        flag_GT_MAX_EDIFF           : out std_logic
+        i_selOutput                 : in std_logic;
+        o_exponentOut               : out std_logic_vector(exponent_bits - 1 downto 0);
+        o_exponentA, o_exponentB    : out std_logic_vector(exponent_bits-1 downto 0);
+        flag_GT_MAX_EDIFF           : out std_logic;
+        flag_zero_Ediff             : out std_logic
     );
 end exponentDatapath;
 
 architecture rtl of exponentDatapath is
-    signal int_exponentA, int_exponentB     : std_logic_vector(bits-1 downto 0);
-    signal int_adder_result, int_Ediff      : std_logic_vector(bits-1 downto 0);
-    signal int_adder1, int_adder2           : std_logic_vector(bits-1 downto 0);
-    signal int_exponentOut                  : std_logic_vector(bits-1 downto 0);
-    constant MAX_EDIFF : std_logic_vector(bits-1 downto 0) := std_logic_vector(to_unsigned(mantissa_bits+1, bits));
-    constant CONST_1 : std_logic_vector(bits-1 downto 0) := std_logic_vector(to_unsigned(1,bits));
+    signal int_exponentA, int_exponentB     : std_logic_vector(exponent_bits-1 downto 0);
+    signal int_adder_result, int_Ediff      : std_logic_vector(exponent_bits-1 downto 0);
+    signal int_adder1, int_adder2           : std_logic_vector(exponent_bits-1 downto 0);
+    signal int_exponentOut                  : std_logic_vector(exponent_bits-1 downto 0);
+    constant MAX_EDIFF : std_logic_vector(exponent_bits-1 downto 0) := std_logic_vector(to_unsigned(mantissa_bits, exponent_bits));
+    constant CONST_1 : std_logic_vector(exponent_bits-1 downto 0) := std_logic_vector(to_unsigned(1,exponent_bits));
 begin
     exponent_A: entity work.exponent
     generic map (
-      bits => bits
+      bits => exponent_bits
     )
     port map (
       i_rstBAR       => i_rstBAR,
@@ -56,32 +60,33 @@ begin
       i_ld           => i_ldB,
       o_exponent     => int_exponentB
     );
-    mux4x1nbit_inst: entity work.mux4x1nbit
+
+    adder_input1: entity work.mux3x1nbit
     generic map (
-      bits => bits
+      bits => exponent_bits
     )
     port map (
-      i_a   => int_Ediff,
-      i_b   => int_exponentOut,
-      i_c   => int_exponentA,
-      i_d   => int_exponentA,
+      i_a   => int_exponentA,
+      i_b   => int_Ediff,
+      i_c   => int_exponentOut,
       i_sel => i_sel_adder_input1,
       o_out => int_adder1
     );
 
+
     adder_input2: entity work.mux2x1nbit
     generic map (
-      bits => bits
+      bits => exponent_bits
     )
     port map (
-      i_a   => CONST_1,
-      i_b   => int_exponentB,
+      i_a   => int_exponentB,
+      i_b   => CONST_1,
       i_sel => i_sel_adder_input2,
       o_out => int_adder2
     );
     exponent_Adder: entity work.fulladdernbit
     generic map (
-      bits => bits
+      bits => exponent_bits
     )
     port map (
       i_a        => int_adder1,
@@ -94,7 +99,7 @@ begin
 
     Ediff: entity work.piponbit
     generic map (
-      bits => bits
+      bits => exponent_bits
     )
     port map (
       i_in     => int_adder_result,
@@ -105,7 +110,7 @@ begin
     );
     Ediff_size_comparator: entity work.comparatornbit
     generic map (
-      bits => bits
+      bits => exponent_bits
     )
     port map (
       i_A  => int_Ediff,
@@ -114,21 +119,41 @@ begin
       o_LT => open,
       o_EQ => open
     );
-
-    piponbit_inst: entity work.piponbit
+    zero_flag_inst: entity work.zero_flag
     generic map (
-      bits => bits
+      WIDTH => exponent_bits
     )
     port map (
-      i_in     => int_adder_result,
-      i_rstBAR => i_rstBAR,
-      i_clk    => i_clk,
-      i_ld     => i_ldOutput,
-      o_out    => int_exponentOut
+      i_data      => int_Ediff,
+      o_zero_flag => flag_zero_Ediff
+    );
+
+    exponentoutput_inst: entity work.exponentOutput
+    generic map (
+      bits => exponent_bits
+    )
+    port map (
+      i_rstBAR         => i_rstBAR,
+      i_clk            => i_clk,
+      i_input          => int_adder_result,
+      i_ld             => i_ldOutput,
+      i_clr            => i_clrOutput,
+      o_exponentOutput => int_exponentOut
     );
 
 
+    mux2x1nbit_inst: entity work.mux2x1nbit
+    generic map (
+      bits => exponent_bits
+    )
+    port map (
+      i_a   => int_exponentA,
+      i_b   => int_exponentOut,
+      i_sel => i_selOutput,
+      o_out => o_exponentOut
+    );
     -- Output driver
-    o_exponentOut <= int_exponentOut;
+    o_exponentA <= int_exponentA;
+    o_exponentB <= int_exponentB;
 
 end rtl;

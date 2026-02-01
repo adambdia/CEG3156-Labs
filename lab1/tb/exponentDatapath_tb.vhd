@@ -21,15 +21,20 @@ architecture sim of exponentDatapath_tb is
     signal i_ldA                 : std_logic := '0';
     signal i_ldB                 : std_logic := '0';
     signal i_ldOutput            : std_logic := '0';
+    signal i_clrOutput           : std_logic := '0';
     signal i_ldEdiff             : std_logic := '0';
 
     signal i_swap                : std_logic := '0';
     signal i_sel_adder_input1    : std_logic_vector(1 downto 0) := "00";
     signal i_sel_adder_input2    : std_logic := '0';
+    signal i_selOutput           : std_logic := '1';
     signal i_subtractExponent    : std_logic := '0';
 
     signal o_exponentOut         : std_logic_vector(bits-1 downto 0);
+    signal o_exponentA           : std_logic_vector(bits-1 downto 0);
+    signal o_exponentB           : std_logic_vector(bits-1 downto 0);
     signal flag_GT_MAX_Ediff     : std_logic;
+    signal flag_zero_Ediff       : std_logic;
 
 begin
 
@@ -47,7 +52,7 @@ begin
     -- DUT instance
     dut : entity work.exponentDatapath
         generic map (
-            bits => bits,
+            exponent_bits => bits,
             mantissa_bits => mantissa_bits
         )
         port map (
@@ -58,13 +63,18 @@ begin
             i_ldA                 => i_ldA,
             i_ldB                 => i_ldB,
             i_ldOutput            => i_ldOutput,
+            i_clrOutput           => i_clrOutput,
             i_subtractExponent    => i_subtractExponent,
             i_ldEdiff             => i_ldEdiff,
             i_swap                => i_swap,
             i_sel_adder_input1    => i_sel_adder_input1,
             i_sel_adder_input2    => i_sel_adder_input2,
+            i_selOutput           => i_selOutput,
             o_exponentOut         => o_exponentOut,
-            flag_GT_MAX_EDIFF     => flag_GT_MAX_Ediff
+            o_exponentA           => o_exponentA,
+            o_exponentB           => o_exponentB,
+            flag_GT_MAX_EDIFF     => flag_GT_MAX_Ediff,
+            flag_zero_Ediff       => flag_zero_Ediff
         );
 
     -- Stimulus
@@ -82,8 +92,8 @@ begin
         --------------------------------------------------
         -- LOAD EXPONENT A = 20, B = 5
         --------------------------------------------------
-        i_exponentA <= "0010000";
-        i_exponentB <= "0001000";
+        i_exponentA <= "0001001";
+        i_exponentB <= "0010000";
 
         i_ldA <= '1';
         i_ldB <= '1';
@@ -96,8 +106,8 @@ begin
         --------------------------------------------------
         -- COMPUTE EDIFF = A - B
         --------------------------------------------------
-        i_sel_adder_input1 <= "10"; -- select exponentA
-        i_sel_adder_input2 <= '1'; -- select exponentB
+        i_sel_adder_input1 <= "00"; -- select exponentA
+        i_sel_adder_input2 <= '0'; -- select exponentB
         i_ldEdiff <= '1';
         i_subtractExponent <= '1';
         wait for CLK_PERIOD;
@@ -124,15 +134,48 @@ begin
         wait for 2 * CLK_PERIOD;
 
         --------------------------------------------------
-        -- ADD 1 TO EXPONENT A and Store In ExponentOut
+        -- COMPUTE EDIFF = A - B
         --------------------------------------------------
-        i_sel_adder_input1 <= "10"; -- select ExponentA
-        i_sel_adder_input2 <= '0'; -- select CONST_1
-        i_ldOutput <= '1';
+        i_sel_adder_input1 <= "00"; -- select exponentA
+        i_sel_adder_input2 <= '0'; -- select exponentB
+        i_ldEdiff <= '1';
+        i_subtractExponent <= '1';
         wait for CLK_PERIOD;
-
-        i_ldOutput <= '0';
+        i_subtractExponent <= '0';
+        i_ldEdiff <= '0';
         wait for 2 * CLK_PERIOD;
+
+        --------------------------------------------------
+        -- SUBTRACT 1 FROM EDIFF A and Store In EDIFF
+        --------------------------------------------------
+        i_sel_adder_input1 <= "01"; -- select ExponentA
+        i_sel_adder_input2 <= '1'; -- select CONST_1
+        i_ldEdiff <= '1';
+        i_subtractExponent <= '1';
+        wait for 3 * CLK_PERIOD;
+
+        i_ldEdiff <= '0';
+        wait for 2 * CLK_PERIOD;
+
+        --------------------------------------------------
+        -- ADD 1 TO A AND STORE IN EXPONENTOUTPUT
+        --------------------------------------------------
+        i_subtractExponent <= '0';
+        i_sel_adder_input1 <= "00";
+        i_sel_adder_input2 <= '1';
+        i_ldOutput <= '1';
+        wait for clk_period;
+        i_ldOutput <= '0';
+
+        --------------------------------------------------
+        -- DECREMENT 1 FROM EXPONENTOUT 
+        --------------------------------------------------
+        i_sel_adder_input1 <= "10";
+        i_sel_adder_input2 <= '1';
+        i_subtractExponent <= '1';
+        i_ldOutput <= '1';
+        WAIT FOR 3 * CLK_PERIOD;
+        i_ldOutput <= '0';
 
         --------------------------------------------------
         -- FORCE LARGE EDIFF TO TRIGGER FLAG
@@ -154,6 +197,15 @@ begin
 
         wait for 2 * CLK_PERIOD;
 
+        i_selOutput <= '0';
+        wait for CLK_PERIOD;
+        i_selOutput <= '1';
+
+        i_clrOutput <= '1';
+        i_ldOutput <= '1';
+        wait for CLK_PERIOD;
+        i_clrOutput <= '0';
+        i_ldOutput <= '0';
         --------------------------------------------------
         -- END SIM
         --------------------------------------------------

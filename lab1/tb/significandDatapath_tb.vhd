@@ -19,15 +19,19 @@ architecture sim of significandDatapath_tb is
     signal i_ldA                 : std_logic := '0';
     signal i_ldB                 : std_logic := '0';
     signal i_ldOutput            : std_logic := '0';
-    signal i_ldOutputA           : std_logic := '0';
 
     signal i_swap                : std_logic := '0';
     signal i_shiftR_B            : std_logic := '0';
     signal i_shiftL_output       : std_logic := '0';
     signal i_subtractSignificand : std_logic := '0';
+    signal i_selOutput           : std_logic := '1';
 
     signal o_significandOutput   : std_logic_vector(bits downto 0);
+    signal o_mantissaA           : std_logic_vector(bits-2 downto 0);
+    signal o_mantissaB           : std_logic_vector(bits-2 downto 0);
+    signal o_mantissaOutput      : std_logic_vector(bits-2 downto 0);
     signal flag_zero             : std_logic;
+    signal flag_MSB_significandOutput   : std_logic;
 
 begin
 
@@ -44,7 +48,7 @@ begin
 
     -- DUT instance
     dut : entity work.significandDatapath
-        generic map(bits => bits)
+        generic map(significand_bits => bits)
         port map(
             i_rstBAR              => i_rstBAR,
             i_clk                 => i_clk,
@@ -53,13 +57,17 @@ begin
             i_ldA                 => i_ldA,
             i_ldB                 => i_ldB,
             i_ldOutput            => i_ldOutput,
-            i_ldOutputA           => i_ldOutputA,
             i_swap                => i_swap,
             i_shiftR_B            => i_shiftR_B,
             i_shiftL_output       => i_shiftL_output,
             i_subtractSignificand => i_subtractSignificand,
+            i_selOutput           => i_selOutput,
             o_significandOutput   => o_significandOutput,
-            flag_zero             => flag_zero
+            o_mantissaA           => o_mantissaA,
+            o_mantissaB           => o_mantissaB,
+            o_mantissaOutput      => o_mantissaOutput,
+            flag_zero_significandOutput => flag_zero,
+            flag_MSB_significandOutput  => flag_MSB_significandOutput
         );
 
     -- Stimulus
@@ -154,11 +162,10 @@ begin
         wait for 2 * CLK_PERIOD;
 
         --------------------------------------------------
-        -- TEST LOAD A INTO OUTPUT
+        -- TEST OUTPUT = A
         --------------------------------------------------
-        i_ldOutputA <= '1';
-        wait for CLK_PERIOD;
-        i_ldOutputA <= '0';
+        i_selOutput <= '0';
+        wait for clk_period;
 
         --------------------------------------------------
         -- END SIM

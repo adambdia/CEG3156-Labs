@@ -60,7 +60,7 @@ begin
 
         for sel in 0 to 3 loop
             i_mux_select <= std_logic_vector(to_unsigned(sel, 2));
-            wait for 10 ns;
+            wait for 40 ns;
         end loop;
 
         i_ld <= '0'; -- Turn off load

@@ -7,8 +7,8 @@ entity exponent is
         i_rstBAR, i_clk     : IN STD_LOGIC;
         i_exponent1         : IN STD_LOGIC_VECTOR(bits-1 downto 0);
         i_exponent2         : IN STD_LOGIC_VECTOR(bits-1 downto 0);
-        i_mux_select, i_ld        : IN STD_LOGIC;
-        o_exponent         : OUT STD_LOGIC_VECTOR(bits-1 downto 0)
+        i_mux_select, i_ld  : IN STD_LOGIC;
+        o_exponent          : OUT STD_LOGIC_VECTOR(bits-1 downto 0)
     );
 end exponent;
 
