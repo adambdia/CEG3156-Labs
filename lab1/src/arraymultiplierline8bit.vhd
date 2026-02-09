@@ -18,7 +18,7 @@ end arraymultiplierline8bit;
 
 architecture rtl of arraymultiplierline8bit is
 -- Signals
-    signal int_carry : std_logic_vector(8);
+    signal int_carry : std_logic_vector(8 downto 0);
     begin
 
         line: for i in 0 to 7 generate
@@ -33,5 +33,6 @@ architecture rtl of arraymultiplierline8bit is
                 );
         end generate;
     
+    int_carry(0) <= '0';
     o_carry <= int_carry(8);
 end rtl;
