@@ -8,7 +8,7 @@ USE ieee.numeric_std.ALL;
 ENTITY arraymultiplier_tb IS
 END arraymultiplier_tb;
 
-ARCHITECTURE tb OF arraymultiplier_tb IS
+ARCHITECTURE tb OF arraymultipliernbits_tb IS
 
     SIGNAL i_M       : std_logic_vector(7 DOWNTO 0);
     SIGNAL i_Q       : std_logic_vector(7 DOWNTO 0);

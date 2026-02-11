@@ -23,6 +23,7 @@ architecture rtl of arraymultiplier8bit is
     -- first line is a special case
 
     line0: entity work.arraymultiplierline8bit
+        generic map(bits => 8)
         port map(
             i_M => i_M,
             i_Qi => i_Q(0),
