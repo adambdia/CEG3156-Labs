@@ -8,3 +8,5 @@ Repo for my labs for CEG3156 Winter 2026 at uOttawa. Using [GHDL](https://github
 4. add a line for `STOPTIME=someamountoftime`
 
 Add testbenches to tb folder and lab specific components in the src directory. Any reusable components should be in the lib folder of the repo's route directory
+
+Compile and simulate with `make all`. See Makefile for other options.
