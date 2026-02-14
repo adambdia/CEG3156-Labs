@@ -9,7 +9,8 @@ entity significandOutputMultiplier is
         i_rstBAR, i_clk             : in std_logic;
         i_product                   : in std_logic_vector(product_bits-1 downto 0);
         i_ld, i_clr, i_shift        : in std_logic;
-        o_significandOutput         : out std_logic_vector(product_bits-1 downto 0)
+        o_significandOutput         : out std_logic_vector(product_bits-1 downto 0);
+        status_MSB                  : out std_logic
     );
 end significandOutputMultiplier;
 
@@ -56,4 +57,5 @@ begin
 
     -- Output driver: 
     o_significandOutput <= int_signficandOutput;
+    status_MSB <= int_signficandOutput_input(product_bits-1);
 end rtl;
