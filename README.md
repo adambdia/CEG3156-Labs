@@ -7,6 +7,6 @@ Repo for my labs for CEG3156 Winter 2026 at uOttawa. Using [GHDL](https://github
 3. add a line for `TB=pathtotb.vhd`
 4. add a line for `STOPTIME=someamountoftime`
 
-Add testbenches to tb folder and lab specific components in the src directory. Any reusable components should be in the lib folder of the repo's route directory
+Add testbenches to tb folder and lab specific components in the src directory. Any reusable components should be in the lib folder of the repo's root directory
 
-Compile and simulate with `make all`. See Makefile for other options.
+Compile and simulate with `make all` in a lab's directory. See Makefile for other options.
