@@ -1,5 +1,5 @@
 # CEG3156-Labs
-Repo for my labs for CEG3156 at uOttawa. Using [GHDL](https://github.com/ghdl/ghdl) and [GTKWave](https://gtkwave.sourceforge.net/) to streamline development
+Repo for my labs for CEG3156 Winter 2026 at uOttawa. Using [GHDL](https://github.com/ghdl/ghdl) and [GTKWave](https://gtkwave.sourceforge.net/) to streamline development
 
 ## For new labs
 1. copy the lab template folder
