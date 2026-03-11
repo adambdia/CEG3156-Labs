@@ -1,21 +1,21 @@
 ----------------------------------------------------------------------
 -- Authors : Akram Atassi and Adam Dia
--- Name: decoder5to32.vhd
+-- Name: decoder5bit.vhd
 -- Description: 5-to-32 bit decoder using vector input and output.
 --              Implemented using strictly structural binary operators.
 ----------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 
-entity decoder5to32 is
+entity decoder5bit is
     port(
         i_en  : in  std_logic;
         i_sel : in  std_logic_vector(4 downto 0);
         o_y   : out std_logic_vector(31 downto 0)
     );
-end decoder5to32;
+end decoder5bit;
 
-architecture structural of decoder5to32 is
+architecture structural of decoder5bit is
     -- Internal signals for inverted bits of the input vector
     signal int_n : std_logic_vector(4 downto 0);
 begin
