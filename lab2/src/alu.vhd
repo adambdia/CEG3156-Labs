@@ -12,6 +12,7 @@ entity alu is
     generic(bits : positive := 32);
     port(
         i_input1, i_input2              : in std_logic_vector(bits-1 downto 0);
+        i_ALUOP                         : in std_logic_vector(1 downto 0);
         i_func                          : in std_logic_vector(5 downto 0);
         o_output                        : out std_logic_vector(bits-1 downto 0);
         o_zero                          : out std_logic;
@@ -77,20 +78,21 @@ begin
     int_lt(0) <= int_sum(bits-1); -- Check sign
 
     ---------------- Control Logic ----------------
-    -- in adder mode (func = 32), mux = 00, ctrl_subtract = 0
-    -- in subtractor mode(func = 34), mux = 00, ctrl_subtract = 1
-    -- in and mode (func = 36), mux = 01, ctrl_subtract = x
-    -- in or mode (func = 37), mux = 10, ctrl_subtract = x
-    -- in slt mode (func = 42), mux = 11, ctrl_subtract = 1
-    -- For now, if func != any of the selected, just add
+    -- 
+    -- in adder mode (ALU Mode = func = 32), mux = 00, ctrl_subtract = 0
+    -- in subtractor mode(ALU = 10 and func = 34 or ALU = 01), mux = 00, ctrl_subtract = 1
+    -- in and mode (ALU = 10 func = 36), mux = 01, ctrl_subtract = x
+    -- in or mode (ALU = 10 func = 37), mux = 10, ctrl_subtract = x
+    -- in slt mode (ALU = 10 func = 42), mux = 11, ctrl_subtract = 1
+    -- For now, if func != any of the selected, just use add mode
     
 
     -- ctrl_subtract <= (i_func == 34 or i_func == 42) = i_func == 10 0 010 or i_func == 10 1 010
-    ctrl_subtract <= i_func(5) and not i_func(4) and not i_func(2) and i_func(1) and not i_func(0);
+    ctrl_subtract <= (not i_ALUOP(1) and i_ALUOP(0) and i_func(5) and not i_func(4) and not i_func(2) and i_func(1) and not i_func(0)) or (not i_ALUOP(1) and i_ALUOP(0));
     -- ctrl_sel(1) <= (i_func == 37 or i_func == 42 ) = i_func == 10 0101 or 10 1010
-    ctrl_sel(1) <= i_func(5) and not i_func(4) and ((not i_func(3) and i_func(2) and not i_func(1) and i_func(0)) or (i_func(3) and not i_func(2) and i_func(1) and not i_func(0)));
+    ctrl_sel(1) <= i_ALUOP(1) and not i_ALUOP(0) and i_func(5) and not i_func(4) and ((not i_func(3) and i_func(2) and not i_func(1) and i_func(0)) or (i_func(3) and not i_func(2) and i_func(1) and not i_func(0)));
     -- ctrl_sel(0) <= (i_func == 36 or i_func == 42) = i_func == 10 010 0 or 10 101 0
-    ctrl_sel(0) <= i_func(5) and not i_func(4) and ((not i_func(3) and i_func(2) and not i_func(1)) or (i_func(3) and not i_func(2) and i_func(1))) and not i_func(0);
+    ctrl_sel(0) <= i_ALUOP(1) and not i_ALUOP(0) and i_func(5) and not i_func(4) and ((not i_func(3) and i_func(2) and not i_func(1)) or (i_func(3) and not i_func(2) and i_func(1))) and not i_func(0);
 
 
     ---------------- Output Drivers ----------------
