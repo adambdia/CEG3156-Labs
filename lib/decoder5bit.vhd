@@ -2,7 +2,6 @@
 -- Authors : Akram Atassi and Adam Dia
 -- Name: decoder5bit.vhd
 -- Description: 5-to-32 bit decoder using vector input and output.
---              Implemented using strictly structural binary operators.
 ----------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
