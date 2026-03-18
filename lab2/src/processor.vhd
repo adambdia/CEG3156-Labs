@@ -84,7 +84,7 @@ BEGIN
     ------------------------------------------------------------------
     -- Datapath
     ------------------------------------------------------------------
-    u_datapath: entity work.datapath(structural)
+    u_datapath: entity work.datapath(rtl)
         PORT MAP (
             i_clk          => i_clk,
             i_rstBAR       => i_rstBAR,
