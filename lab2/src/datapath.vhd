@@ -91,7 +91,7 @@ architecture rtl of datapath is
         )
         port map (
             i_a        => int_pc_out,
-            i_b        => x"04",        -- Literal 4 in 8-bit hex
+            i_b        => x"08",        -- Literal 4 in 8-bit hex
             i_carry    => '0',
             i_subtract => '0',
             o_sum      => int_next_instr_addr,
