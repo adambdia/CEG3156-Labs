@@ -39,7 +39,8 @@ entity datapath is
         o_branch_sig     : out std_logic;                     -- Tap of the Branch signal
         o_memwrite_sig   : out std_logic;                     -- Tap of the MemWrite signal
         o_regwrite_sig   : out std_logic;                      -- Tap of the RegWrite signal
-        o_jump_addr : out std_logic_vector(7 downto 0)
+        o_jump_addr : out std_logic_vector(7 downto 0);
+        o_pc_in : out std_logic_vector(7 downto 0)
     );
 end datapath;
 
@@ -82,6 +83,7 @@ architecture rtl of datapath is
     );
 
     o_instr_addr <= int_pc_out;
+    o_pc_in <= int_pc_in;
 
     u_pc_adder: entity work.fulladdernbit(rtl)
         generic map (
