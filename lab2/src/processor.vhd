@@ -83,7 +83,7 @@ BEGIN
 
     o_memwrite_tap <= int_MemWrite;
     o_regwrite_tap <= int_RegWrite;
-    o_branch_tap <= o_branch_tap;
+    o_branch_tap <= int_Branch;
 
     ------------------------------------------------------------------
     -- Datapath
