@@ -19,7 +19,8 @@ ENTITY processor IS
         o_memwrite_tap    : OUT std_logic;
         o_regwrite_tap    : OUT std_logic;
         o_jump_tap : out std_logic;
-        o_jump_addr : out std_logic_vector(7 downto 0)
+        o_jump_addr : out std_logic_vector(7 downto 0);
+        o_pc : out std_logic_vector(7 downto 0)
     );
 END processor;
 
@@ -55,6 +56,7 @@ BEGIN
     o_instruction_tap <= int_instruction; -- Direct wire to top level
     o_zero_flag       <= int_zero;
     o_jump_tap <= int_Jump;
+    o_pc <= int_instr_addr;
 
     ------------------------------------------------------------------
     -- Instruction Memory
