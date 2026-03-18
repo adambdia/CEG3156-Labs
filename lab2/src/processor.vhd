@@ -81,6 +81,10 @@ BEGIN
             o_Jump => int_Jump
         );
 
+    o_memwrite_tap <= int_MemWrite;
+    o_regwrite_tap <= int_RegWrite;
+    o_branch_tap <= o_branch_tap;
+
     ------------------------------------------------------------------
     -- Datapath
     ------------------------------------------------------------------
@@ -103,10 +107,7 @@ BEGIN
             o_mem_addr     => int_mem_addr_32,
             o_mem_data_out => int_mem_data_w,
 
-            o_zero         => int_zero,
-            o_branch_sig   => o_branch_tap,
-            o_memwrite_sig => o_memwrite_tap,
-            o_regwrite_sig => o_regwrite_tap
+            o_zero         => int_zero
         );
 
     ------------------------------------------------------------------
