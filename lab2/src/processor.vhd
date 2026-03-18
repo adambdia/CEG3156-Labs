@@ -37,7 +37,9 @@ ARCHITECTURE structural OF processor IS
     signal int_RegWrite    : std_logic;
     signal int_Branch      : std_logic;
     signal int_ALUOp       : std_logic_vector(1 downto 0);
+    signal int_Jump : std_logic;
     signal int_zero        : std_logic;
+    
 
     -- Data Memory Bus Signals
     signal int_mem_addr_32 : std_logic_vector(31 downto 0);
@@ -75,7 +77,8 @@ BEGIN
             o_ALUSrc   => int_ALUSrc,
             o_RegWrite => int_RegWrite,
             o_Branch   => int_Branch,
-            o_ALUOp    => int_ALUOp
+            o_ALUOp    => int_ALUOp,
+            o_Jump => int_Jump
         );
 
     ------------------------------------------------------------------
@@ -94,6 +97,7 @@ BEGIN
             i_RegWrite     => int_RegWrite,
             i_Branch       => int_Branch,
             i_ALUOp        => int_ALUOp,
+            i_Jump => int_Jump,
 
             i_mem_data_in  => int_mem_data_q,
             o_mem_addr     => int_mem_addr_32,
