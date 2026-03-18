@@ -43,7 +43,7 @@ architecture rtl of controlunitsignalgenerator is
     o_Branch <= i_Jtype and (i_zero xor i_opcode_bit_0);
     o_ALUOp(1) <= i_Rtype;
     o_ALUOp(0) <= i_Jtype;
-    o_Jump <= o_Jump;
+    o_Jump <= i_Jump;
 
 
 end rtl;
