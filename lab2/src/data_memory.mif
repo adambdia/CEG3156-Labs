@@ -1,0 +1,16 @@
+DEPTH = 256;
+WIDTH = 8;
+ADDRESS_RADIX = HEX;
+DATA_RADIX = HEX;
+
+CONTENT
+BEGIN
+
+-- Default: all zeros
+[00..FF] : 00;
+
+-- Initial values for benchmark program
+00 : 55;
+01 : AA;
+
+END;

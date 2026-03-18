@@ -33,8 +33,7 @@ entity datapath is
 
         -- Status Flags and Debug Outputs
         o_zero           : out std_logic;
-        o_mux_out        : out std_logic_vector(31 downto 0); -- Final Write-Back Mux result
-        
+                
         -- Control Signal Status Outputs
         o_branch_sig     : out std_logic;                     -- Tap of the Branch signal
         o_memwrite_sig   : out std_logic;                     -- Tap of the MemWrite signal
