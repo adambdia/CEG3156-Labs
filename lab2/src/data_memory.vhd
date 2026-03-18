@@ -20,6 +20,7 @@ ENTITY data_memory IS
 END data_memory;
 
 ARCHITECTURE structural OF data_memory IS
+signal int_clock_not: std_logic;
 BEGIN
 
     RAM_inst : lpm_ram_dq
@@ -37,9 +38,11 @@ BEGIN
             address => address,
             data    => data,
             we      => wren,
-            inclock => clock,    -- write clock edge
+            inclock => int_clock_not,    -- falling edge clock for some reason
             q       => q
             -- outclock omitted: UNREGISTERED output does not need it
         );
+
+    int_clock_not <= not clock;
 
 END structural;
