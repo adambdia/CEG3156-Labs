@@ -18,7 +18,8 @@ ENTITY processor IS
         o_branch_tap      : OUT std_logic;
         o_memwrite_tap    : OUT std_logic;
         o_regwrite_tap    : OUT std_logic;
-        o_jump_tap : out std_logic
+        o_jump_tap : out std_logic;
+        o_jump_addr : out std_logic_vector(7 downto 0)
     );
 END processor;
 
@@ -109,7 +110,8 @@ BEGIN
             o_mem_addr     => int_mem_addr_32,
             o_mem_data_out => int_mem_data_w,
 
-            o_zero         => int_zero
+            o_zero         => int_zero,
+            o_jump_addr => o_jump_addr
         );
 
     ------------------------------------------------------------------

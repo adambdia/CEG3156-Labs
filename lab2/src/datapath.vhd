@@ -38,7 +38,8 @@ entity datapath is
         -- Control Signal Status Outputs
         o_branch_sig     : out std_logic;                     -- Tap of the Branch signal
         o_memwrite_sig   : out std_logic;                     -- Tap of the MemWrite signal
-        o_regwrite_sig   : out std_logic                      -- Tap of the RegWrite signal
+        o_regwrite_sig   : out std_logic;                      -- Tap of the RegWrite signal
+        o_jump_addr : out std_logic_vector(7 downto 0)
     );
 end datapath;
 
@@ -127,6 +128,7 @@ architecture rtl of datapath is
         );
 
     int_jump_addr <= i_instruction(5 downto 0) & "00"; -- jump shifter
+    o_jump_addr <= int_jump_addr;
 
     u_jump_mux : entity work.mux2x1nbit
         generic map (bits => 8)
