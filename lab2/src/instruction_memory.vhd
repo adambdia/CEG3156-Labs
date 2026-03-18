@@ -17,7 +17,7 @@ ENTITY instruction_memory IS
     );
 END instruction_memory;
 
-ARCHITECTURE structural OF instruction_memory IS
+ARCHITECTURE rtl OF instruction_memory IS
 BEGIN
 
     ROM_inst : lpm_rom
@@ -36,4 +36,4 @@ BEGIN
             q       => q
         );
 
-END structural;
+END rtl;

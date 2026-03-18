@@ -19,7 +19,7 @@ ENTITY data_memory IS
     );
 END data_memory;
 
-ARCHITECTURE structural OF data_memory IS
+ARCHITECTURE rtl OF data_memory IS
 signal int_clock_not: std_logic;
 BEGIN
 
@@ -45,4 +45,4 @@ BEGIN
 
     int_clock_not <= not clock;
 
-END structural;
+END rtl;
