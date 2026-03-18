@@ -68,6 +68,7 @@ architecture rtl of datapath is
     signal int_branch_mux_out : std_logic_vector(7 downto 0);
     signal int_jump_addr : std_logic_vector(7 downto 0);
 
+    signal int_clk_bar     : std_logic; -- Just for the PC
     begin
 
     u_program_counter: entity work.piponbit
@@ -77,10 +78,11 @@ architecture rtl of datapath is
     port map(
         i_in => int_pc_in,
         i_rstBAR => i_rstBAR,
-        i_clk => i_clk,
+        i_clk => int_clk_bar,
         i_ld => '1', -- always loading
         o_out => int_pc_out
     );
+    int_clk_bar <= not i_clk;
 
     o_instr_addr <= int_pc_out;
     o_pc_in <= int_pc_in;
