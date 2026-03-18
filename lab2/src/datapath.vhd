@@ -24,6 +24,7 @@ entity datapath is
         i_RegWrite       : in  std_logic;
         i_Branch         : in  std_logic;
         i_ALUOp          : in  std_logic_vector(1 downto 0);
+        i_Jump : in std_logic;
 
         -- Data Memory Interface
         i_mem_data_in    : in  std_logic_vector(31 downto 0); -- Word read from Data Memory
@@ -33,7 +34,7 @@ entity datapath is
 
         -- Status Flags and Debug Outputs
         o_zero           : out std_logic;
-                
+
         -- Control Signal Status Outputs
         o_branch_sig     : out std_logic;                     -- Tap of the Branch signal
         o_memwrite_sig   : out std_logic;                     -- Tap of the MemWrite signal
@@ -62,11 +63,12 @@ architecture rtl of datapath is
     signal int_wb_mux_out : std_logic_vector(31 downto 0);
 
 
-    signal 
+    signal int_branch_mux_out : std_logic_vector(7 downto 0);
+    signal int_jump_addr : std_logic_vector(7 downto 0);
 
     begin
 
-    u_program_counter: entity work.piponbit()
+    u_program_counter: entity work.piponbit
     generic map(
         bits => 8
     )
@@ -121,9 +123,21 @@ architecture rtl of datapath is
             i_a   => int_next_instr_addr,
             i_b   => int_branch_addr,
             i_sel => i_Branch,
-            o_out => int_pc_input
+            o_out => int_branch_mux_out
         );
 
+    int_jump_addr <= i_instruction(5 downto 0) & "00"; -- jump shifter
+
+    u_jump_mux : entity work.mux2x1nbit
+        generic map (bits => 8)
+        port map(
+            i_a => int_branch_mux_out,
+            i_b => int_jump_addr,
+            i_sel => i_Jump,
+            o_out => int_pc_in
+        );
+
+    
     u_regdst_mux: entity work.mux2x1nbit(rtl)
         generic map (
             bits => 5
@@ -192,6 +206,9 @@ architecture rtl of datapath is
             i_sel => i_MemToReg,
             o_out => int_wb_mux_out
         );
+
+
+    
 
 
 end rtl;

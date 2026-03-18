@@ -24,7 +24,8 @@ entity controlunitsignalgenerator is
         o_ALUSrc : out std_logic;
         o_RegWrite : out std_logic;
         o_Branch : out std_logic;
-        o_ALUOp : out std_logic_vector(1 downto 0));
+        o_ALUOp : out std_logic_vector(1 downto 0);
+        o_Jump : out std_logic);
 end controlunitsignalgenerator;
 
 architecture rtl of controlunitsignalgenerator is
@@ -39,9 +40,10 @@ architecture rtl of controlunitsignalgenerator is
     o_MemRead <= i_lw;
     o_MemWrite <= i_sw;
     -- supports BNE and BEQ
-    o_Branch <= i_Jump or (i_Jtype and (i_zero xor i_opcode_bit_0));
+    o_Branch <= i_Jtype and (i_zero xor i_opcode_bit_0);
     o_ALUOp(1) <= i_Rtype;
     o_ALUOp(0) <= i_Jtype;
+    o_Jump <= o_Jump;
 
 
 end rtl;

@@ -19,7 +19,8 @@ entity controlunit is
         o_ALUSrc   : out std_logic;
         o_RegWrite : out std_logic;
         o_Branch   : out std_logic;
-        o_ALUOp    : out std_logic_vector(1 downto 0)
+        o_ALUOp    : out std_logic_vector(1 downto 0);
+        o_Jump : out std_logic
     );
 end controlunit;
 
@@ -67,7 +68,8 @@ begin
             o_ALUSrc       => o_ALUSrc,
             o_RegWrite     => o_RegWrite,
             o_Branch       => o_Branch,
-            o_ALUOp        => o_ALUOp
+            o_ALUOp        => o_ALUOp,
+            o_Jump => o_Jump
         );
 
 
