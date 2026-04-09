@@ -1,0 +1,52 @@
+----------------------------------------------------------------------
+-- Authors: Karim Elsawi and Adam Dia
+-- Name: instruction_memory.vhd
+-- Description: Behavioral instruction memory stub for GHDL simulation.
+--              Replaces the Quartus LPM ROM IP core. Synchronous read.
+----------------------------------------------------------------------
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity instruction_memory is
+    port(
+        address : in  std_logic_vector(7 downto 0);
+        clock   : in  std_logic;
+        q       : out std_logic_vector(31 downto 0)
+    );
+end instruction_memory;
+
+architecture rtl of instruction_memory is
+    type rom_t is array (0 to 63) of std_logic_vector(31 downto 0);
+    constant ROM : rom_t := (
+        0  => x"8C020000",  -- lw  $2, 0($0)
+        1  => x"8C030001",  -- lw  $3, 1($0)
+        2  => x"00430822",  -- sub $1, $2, $3
+        3  => x"00232025",  -- or  $4, $1, $3
+        4  => x"AC040003",  -- sw  $4, 3($0)
+        5  => x"00430820",  -- add $1, $2, $3
+        6  => x"AC010004",  -- sw  $1, 4($0)
+        7  => x"8C020003",  -- lw  $2, 3($0)
+        8  => x"8C030004",  -- lw  $3, 4($0)
+        9  => x"0800000B",  -- j   11
+        10 => x"1021FFF5",  -- beq $1, $1, -12
+        11 => x"1022FFFE",  -- beq $1, $2, -2
+        12 => x"1021FFF7",  -- beq $1, $2, -2
+
+        others => x"00000000"
+    );
+begin
+    process(clock)
+        variable idx : integer;
+    begin
+        if rising_edge(clock) then
+            idx := to_integer(unsigned(address)) / 4;
+            if idx >= 0 and idx < 64 then
+                q <= ROM(idx);
+            else
+                q <= x"00000000";
+            end if;
+        end if;
+    end process;
+end rtl;

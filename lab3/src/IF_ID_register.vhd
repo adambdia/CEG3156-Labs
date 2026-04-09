@@ -21,17 +21,37 @@ entity IF_ID_register is
 end IF_ID_register;
 
 architecture rtl of IF_ID_register is
-    signal int_rstBAR : std_logic;
-    signal int_ld     : std_logic;
+    signal int_rstBAR    : std_logic;
+    signal int_ld        : std_logic;
+    signal int_pc_in     : std_logic_vector(7 downto 0);
+    signal int_instr_in  : std_logic_vector(31 downto 0);
 begin
 
-    int_rstBAR <= i_rstBAR AND (NOT i_flush);
-    int_ld     <= NOT i_stall;
+    int_rstBAR <= i_rstBAR;
+    int_ld     <= (NOT i_stall) OR i_flush;
+
+    u_flush_mux_pc: entity work.mux2x1nbit
+        generic map(bits => 8)
+        port map(
+            i_a   => i_PC_plus4,
+            i_b   => x"00",
+            i_sel => i_flush,
+            o_out => int_pc_in
+        );
+
+    u_flush_mux_instr: entity work.mux2x1nbit
+        generic map(bits => 32)
+        port map(
+            i_a   => i_instruction,
+            i_b   => x"00000000",
+            i_sel => i_flush,
+            o_out => int_instr_in
+        );
 
     u_PC_plus4: entity work.piponbit
         generic map(bits => 8)
         port map(
-            i_in     => i_PC_plus4,
+            i_in     => int_pc_in,
             i_rstBAR => int_rstBAR,
             i_clk    => i_clk,
             i_ld     => int_ld,
@@ -41,7 +61,7 @@ begin
     u_instruction: entity work.piponbit
         generic map(bits => 32)
         port map(
-            i_in     => i_instruction,
+            i_in     => int_instr_in,
             i_rstBAR => int_rstBAR,
             i_clk    => i_clk,
             i_ld     => int_ld,
