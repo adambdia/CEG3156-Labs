@@ -61,6 +61,7 @@ architecture rtl of pipelined_datapath is
     signal ifid_instruction  : std_logic_vector(31 downto 0);
 
     -- ID stage control
+    signal int_opcode_tap    : std_logic_vector(5 downto 0);
     signal int_ctrl_regwrite : std_logic;
     signal int_ctrl_memtoreg : std_logic;
     signal int_ctrl_branch   : std_logic;
@@ -240,9 +241,11 @@ begin
     ---------------------------------------------------------------
     -- ID Stage
     ---------------------------------------------------------------
+    int_opcode_tap <= ifid_instruction(31 downto 26);
+
     u_ctrl: entity work.pipelined_controlunit
         port map(
-            i_opcode   => ifid_instruction(31 downto 26),
+            i_opcode   => int_opcode_tap,
             o_RegDst   => int_ctrl_regdst,
             o_MemRead  => int_ctrl_memread,
             o_MemToReg => int_ctrl_memtoreg,
